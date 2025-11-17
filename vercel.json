@@ -8,6 +8,10 @@
       "config": {
         "distDir": "dist"
       }
+    },
+    {
+      "src": "app.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
