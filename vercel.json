@@ -4,5 +4,11 @@
   "outputDirectory": "dist",
   "env": {
     "VITE_API_BASE": "https://distrowiki-api.vercel.app"
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
