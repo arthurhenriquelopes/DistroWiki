@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Github } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
+import Logo from "./Logo";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,11 +20,8 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2 smooth-transition hover:opacity-80">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-            <span className="text-xl font-bold text-primary-foreground">DW</span>
-          </div>
-          <span className="text-xl font-bold gradient-text hidden sm:inline">DistroWiki</span>
+        <Link to="/" className="smooth-transition hover:opacity-80">
+          <Logo />
         </Link>
 
         {/* Desktop Navigation */}
@@ -42,7 +40,7 @@ const Header = () => {
             </Link>
           ))}
           <a
-            href="https://github.com"
+            href="https://github.com/arthurhenriquelopes/distrowiki"
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-foreground smooth-transition"
@@ -81,7 +79,7 @@ const Header = () => {
               </Link>
             ))}
             <a
-              href="https://github.com"
+              href="https://github.com/arthurhenriquelopes/distrowiki"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center space-x-2 text-base font-medium text-muted-foreground hover:text-foreground smooth-transition"
