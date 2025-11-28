@@ -1,8 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Github } from "lucide-react";
 import { useState } from "react";
-import { Button } from "./ui/button";
-import Logo from "./Logo";
+import { Button } from "../ui/button";
+import Logo from "../Logo";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

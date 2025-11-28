@@ -1,18 +1,25 @@
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ExternalLink, Download, Loader2 } from "lucide-react";
+import { ArrowLeft, ExternalLink, Loader2, GitCompare } from "lucide-react";
 import ScoreBadge from "@/components/ScoreBadge";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useComparison } from "@/contexts/ComparisonContext";
 
 const DistroDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { replaceSelection } = useComparison();
   const [distro, setDistro] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [allDistros, setAllDistros] = useState<any[]>([]);
+  const [compareWith, setCompareWith] = useState<string>("");
 
+  // Buscar distro atual
   useEffect(() => {
     const fetchDistro = async () => {
       if (!id) return;
@@ -40,6 +47,63 @@ const DistroDetails = () => {
 
     fetchDistro();
   }, [id]);
+
+  // Buscar todas as distros para o select
+  useEffect(() => {
+    const fetchAllDistros = async () => {
+      try {
+        const apiBase = import.meta.env.VITE_API_BASE_ || 'https://distrowiki-api.vercel.app';
+        const response = await fetch(`${apiBase}/distros?page=1&page_size=100&sort_by=name&order=asc`);
+        
+        if (!response.ok) return;
+        
+        const data = await response.json();
+        const transformed = (data.distros || []).map((d: any) => ({
+          id: d.id,
+          name: d.name,
+          family: d.family || "Independent",
+          desktopEnvironments: d.desktop_environments || [],
+          lastRelease: d.latest_release_date || new Date().toISOString(),
+          score: d.rating || 0,
+          logo: `/logos/${d.id}.svg`,
+          website: d.homepage,
+          description: d.summary || d.description,
+          ramIdle: d.ram_idle || 0,
+          cpuScore: d.cpu_score || 0,
+          ioScore: d.io_score || 0,
+          releaseModel: d.release_model || "Unknown",
+          ltsSupport: d.lts_support || false,
+          packageManager: d.package_manager || "N/A",
+        }));
+        
+        setAllDistros(transformed);
+      } catch (err) {
+        console.error('Erro ao buscar distros:', err);
+      }
+    };
+
+    fetchAllDistros();
+  }, []);
+
+  const handleCompare = () => {
+    if (!compareWith || !distro) return;
+
+    const d1 = { 
+      ...distro, 
+      id: distro.id || id,
+      score: distro.rating || 0,
+      desktopEnvironments: distro.desktop_environments || [],
+      lastRelease: distro.latest_release_date || new Date().toISOString(),
+    };
+    const d2 = allDistros.find((d) => d.id === compareWith);
+
+    if (d1 && d2) {
+      replaceSelection([d1, d2]);
+      setTimeout(() => {
+        navigate("/comparacao");
+      }, 0);
+    }
+  };
 
   if (loading) {
     return (
@@ -97,7 +161,7 @@ const DistroDetails = () => {
       >
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
           <img
-            src={`/logos/${distro.id}.svg`}
+            src={`/logos/${distro.id || id}.svg`}
             alt={`${distro.name} logo`}
             className="w-32 h-32 object-contain"
             onError={(e) => {
@@ -107,7 +171,7 @@ const DistroDetails = () => {
           <div className="flex-1 text-center md:text-left">
             <h1 className="text-4xl md:text-5xl font-bold mb-2">{distro.name}</h1>
             <p className="text-xl text-muted-foreground mb-4">{distro.family || 'Independente'}</p>
-            <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+            <div className="flex flex-wrap gap-3 justify-center md:justify-start items-center">
               <ScoreBadge score={distro.rating || 0} size="lg" />
               {distro.homepage && (
                 <a href={distro.homepage} target="_blank" rel="noopener noreferrer">
@@ -117,9 +181,36 @@ const DistroDetails = () => {
                   </Button>
                 </a>
               )}
-              <Link to="/comparacao">
-                <Button variant="outline">Comparar com outra</Button>
-              </Link>
+              
+              {/* Select de Comparação */}
+              <div className="flex gap-2 items-center">
+                <Select value={compareWith} onValueChange={setCompareWith}>
+                  <SelectTrigger className="w-[200px] h-10">
+                    <SelectValue placeholder="Comparar com..." />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[300px]">
+                    {allDistros
+                      .filter(d => d.id !== (distro.id || id))
+                      .map((d) => (
+                        <SelectItem key={d.id} value={d.id} className="cursor-pointer">
+                          <div className="flex items-center gap-2">
+                            <img src={d.logo} alt={d.name} className="w-5 h-5 object-contain" />
+                            <span>{d.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <Button 
+                  onClick={handleCompare} 
+                  disabled={!compareWith}
+                  variant="outline"
+                  className="gap-2"
+                >
+                  <GitCompare className="w-4 h-4" />
+                  Comparar
+                </Button>
+              </div>
             </div>
           </div>
         </div>

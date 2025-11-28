@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Github } from "lucide-react";
-import Logo from "./Logo";
+import Logo from "../Logo";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();

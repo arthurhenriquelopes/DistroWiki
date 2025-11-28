@@ -5,10 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ComparisonProvider } from "./contexts/ComparisonContext";
 import Layout from "./pages/Layout";
-import Home from "./pages/Home";
-import Catalog from "./pages/Catalog";
-import Comparison from "./pages/Comparison";
-import DistroDetails from "./pages/DistroDetails";
+import Index from "./pages/Index";
+import Catalog from "./pages/catalog/Catalog";
+import Comparison from "./pages/comparison/Comparison";
+import DistroDetails from "./pages/distro/DistroDetails";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
@@ -23,7 +23,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route element={<Layout />}>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Index />} /> {/* ← MUDOU AQUI */}
               <Route path="/catalogo" element={<Catalog />} />
               <Route path="/comparacao" element={<Comparison />} />
               <Route path="/distro/:id" element={<DistroDetails />} />
