@@ -6,7 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import CatalogViewControls from "./CatalogViewControls";
 
 interface CatalogFiltersProps {
@@ -39,7 +38,7 @@ const CatalogFilters = ({
   setViewMode,
 }: CatalogFiltersProps) => {
   return (
-    <div className="bg-card border border-border rounded-xl p-6 mb-8 animate-slide-up">
+    <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-6 mb-8 animate-slide-up">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="w-5 h-5 text-primary" />
@@ -54,13 +53,14 @@ const CatalogFilters = ({
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <label className="text-sm font-medium mb-2 block text-muted-foreground">
+      {/* Selects Compactos */}
+      <div className="flex flex-wrap gap-3">
+        <div className="min-w-[140px] max-w-[200px] flex-1">
+          <label className="text-xs font-medium mb-1.5 block text-muted-foreground">
             Família/Base
           </label>
           <Select value={filterFamily} onValueChange={setFilterFamily}>
-            <SelectTrigger>
+            <SelectTrigger className="h-9 text-sm">
               <SelectValue placeholder="Todas" />
             </SelectTrigger>
             <SelectContent>
@@ -74,12 +74,12 @@ const CatalogFilters = ({
           </Select>
         </div>
 
-        <div>
-          <label className="text-sm font-medium mb-2 block text-muted-foreground">
+        <div className="min-w-[140px] max-w-[200px] flex-1">
+          <label className="text-xs font-medium mb-1.5 block text-muted-foreground">
             Ambiente Gráfico
           </label>
           <Select value={filterDE} onValueChange={setFilterDE}>
-            <SelectTrigger>
+            <SelectTrigger className="h-9 text-sm">
               <SelectValue placeholder="Todos" />
             </SelectTrigger>
             <SelectContent>
@@ -93,12 +93,12 @@ const CatalogFilters = ({
           </Select>
         </div>
 
-        <div>
-          <label className="text-sm font-medium mb-2 block text-muted-foreground">
+        <div className="min-w-[140px] max-w-[200px] flex-1">
+          <label className="text-xs font-medium mb-1.5 block text-muted-foreground">
             Ordenar por
           </label>
           <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger>
+            <SelectTrigger className="h-9 text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -109,34 +109,6 @@ const CatalogFilters = ({
           </Select>
         </div>
       </div>
-
-      {(filterFamily !== "all" || filterDE !== "all") && (
-        <div className="flex items-center gap-2 mt-4 flex-wrap">
-          <span className="text-sm text-muted-foreground">Filtros ativos:</span>
-          {filterFamily !== "all" && (
-            <Badge variant="secondary" className="gap-1">
-              {filterFamily}
-              <button
-                onClick={() => setFilterFamily("all")}
-                className="ml-1 hover:text-destructive"
-              >
-                ×
-              </button>
-            </Badge>
-          )}
-          {filterDE !== "all" && (
-            <Badge variant="secondary" className="gap-1">
-              {filterDE}
-              <button
-                onClick={() => setFilterDE("all")}
-                className="ml-1 hover:text-destructive"
-              >
-                ×
-              </button>
-            </Badge>
-          )}
-        </div>
-      )}
     </div>
   );
 };

@@ -16,34 +16,47 @@ const CatalogViewControls = ({
 }: CatalogViewControlsProps) => {
   return (
     <div className="flex items-center gap-2">
-      {/* Toggle Specs */}
+      {/* Toggle Specs - Agora com outline style */}
       <Button
-        variant={showSpecs ? "default" : "outline"}
+        variant="outline"
         size="sm"
         onClick={() => setShowSpecs(!showSpecs)}
-        className="gap-2"
+        className="gap-2 border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
       >
-        {showSpecs ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+        {showSpecs ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
         <span className="hidden sm:inline">
-          {showSpecs ? "Ocultar Specs" : "Mostrar Specs"}
+          {showSpecs ? "Ocultar" : "Mostrar"} Specs
         </span>
       </Button>
 
-      {/* Toggle View Mode */}
-      <div className="flex border border-border rounded-lg overflow-hidden">
+      {/* Divider */}
+      <div className="w-px h-6 bg-border" />
+
+      {/* Toggle View Mode - Agora toggle group conectado */}
+      <div className="flex border border-border rounded-md overflow-hidden">
         <Button
-          variant={viewMode === "list" ? "default" : "ghost"}
+          variant={viewMode === "list" ? "secondary" : "ghost"}
           size="sm"
           onClick={() => setViewMode("list")}
-          className="rounded-none border-0"
+          className={`rounded-none border-0 px-3 ${
+            viewMode === "list"
+              ? "bg-secondary text-secondary-foreground"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted"
+          }`}
+          aria-label="Visualização em lista"
         >
           <LayoutList className="w-4 h-4" />
         </Button>
         <Button
-          variant={viewMode === "grid" ? "default" : "ghost"}
+          variant={viewMode === "grid" ? "secondary" : "ghost"}
           size="sm"
           onClick={() => setViewMode("grid")}
-          className="rounded-none border-0"
+          className={`rounded-none border-0 px-3 ${
+            viewMode === "grid"
+              ? "bg-secondary text-secondary-foreground"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted"
+          }`}
+          aria-label="Visualização em grade"
         >
           <LayoutGrid className="w-4 h-4" />
         </Button>

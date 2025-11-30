@@ -20,7 +20,10 @@ const DistroCardList = ({
   showSpecs = true,
 }: DistroCardListProps) => {
   const formatFamily = (family: string): string => {
-    if (family.toLowerCase().includes("independente") || family.toLowerCase().includes("independent")) {
+    if (
+      family.toLowerCase().includes("independente") ||
+      family.toLowerCase().includes("independent")
+    ) {
       return "Base Independente";
     }
     const baseName = family.split(/[/(]/)[0].trim();
@@ -29,23 +32,25 @@ const DistroCardList = ({
 
   const getDesktopEnvColor = (desktopEnv: string): string => {
     const colorMap: { [key: string]: string } = {
-      "gnome": "bg-blue-500 text-white",
+      gnome: "bg-blue-500 text-white",
       "kde plasma": "bg-purple-500 text-white",
-      "kde": "bg-purple-500 text-white",
-      "xfce": "bg-blue-400 text-white",
-      "lxqt": "bg-red-500 text-white",
-      "mate": "bg-green-600 text-white",
-      "budgie": "bg-pink-500 text-white",
-      "cinnamon": "bg-orange-500 text-white",
-      "i3": "bg-gray-700 text-white",
-      "sway": "bg-gray-600 text-white",
-      "pantheon": "bg-cyan-500 text-white",
-      "deepin": "bg-emerald-500 text-white",
+      kde: "bg-purple-500 text-white",
+      xfce: "bg-blue-400 text-white",
+      lxqt: "bg-red-500 text-white",
+      mate: "bg-green-600 text-white",
+      budgie: "bg-pink-500 text-white",
+      cinnamon: "bg-orange-500 text-white",
+      i3: "bg-gray-700 text-white",
+      sway: "bg-gray-600 text-white",
+      pantheon: "bg-cyan-500 text-white",
+      deepin: "bg-emerald-500 text-white",
+      none: "bg-transparent border border-muted-foreground/40 text-muted-foreground",
     };
     return colorMap[desktopEnv.toLowerCase()] || "bg-gray-500 text-white";
   };
 
-  const hasPerformanceData = distro.idle_ram_usage || distro.cpu_score || distro.io_score;
+  const hasPerformanceData =
+    distro.idle_ram_usage || distro.cpu_score || distro.io_score;
 
   return (
     <div className="relative bg-card border border-border rounded-xl p-5 card-hover group h-full flex flex-col">
@@ -62,12 +67,18 @@ const DistroCardList = ({
             alt={`${distro.name} logo`}
             className="w-16 h-16 object-contain flex-shrink-0"
             onError={(e) => {
-              e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(distro.name)}&background=random&size=64`;
+              e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                distro.name
+              )}&background=random&size=64`;
             }}
           />
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-bold text-foreground mb-1 line-clamp-2">{distro.name}</h3>
-            <p className="text-xs text-muted-foreground">{formatFamily(distro.family)}</p>
+            <h3 className="text-lg font-bold text-foreground mb-1 line-clamp-2">
+              {distro.name}
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              {formatFamily(distro.family)}
+            </p>
           </div>
         </div>
 
@@ -86,14 +97,16 @@ const DistroCardList = ({
           )}
         </div>
 
-        {distro.desktopEnvironments && distro.desktopEnvironments.length > 0 && (
+        {distro.desktopEnvironments && (
           <div className="flex flex-wrap gap-1.5 mb-3">
             {distro.desktopEnvironments.slice(0, 3).map((de) => {
-              const colors = getDesktopEnvColor(de).split(' ');
+              const colors = getDesktopEnvColor(de).split(" ");
               return (
                 <span
                   key={de}
-                  className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors[0]} ${colors[1]}`}
+                  className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${colors.join(
+                    " "
+                  )}`}
                 >
                   {de}
                 </span>
@@ -116,12 +129,19 @@ const DistroCardList = ({
                     <HardDrive className="w-3 h-3" />
                     RAM Idle
                   </p>
-                  <p className="text-xs font-semibold">{distro.idle_ram_usage} MB</p>
+                  <p className="text-xs font-semibold">
+                    {distro.idle_ram_usage} MB
+                  </p>
                 </div>
                 <div className="w-full bg-muted rounded-full h-1.5">
                   <div
                     className="bg-blue-500 rounded-full h-1.5 transition-all duration-300"
-                    style={{ width: `${Math.min((distro.idle_ram_usage / 2000) * 100, 100)}%` }}
+                    style={{
+                      width: `${Math.min(
+                        (distro.idle_ram_usage / 2000) * 100,
+                        100
+                      )}%`,
+                    }}
                   />
                 </div>
               </div>
@@ -165,8 +185,12 @@ const DistroCardList = ({
 
             {distro.requirements && (
               <div className="flex justify-between items-center pt-1">
-                <span className="text-xs text-muted-foreground">Requisitos</span>
-                <span className="text-xs font-medium">{distro.requirements}</span>
+                <span className="text-xs text-muted-foreground">
+                  Requisitos
+                </span>
+                <span className="text-xs font-medium">
+                  {distro.requirements}
+                </span>
               </div>
             )}
           </div>
@@ -179,7 +203,7 @@ const DistroCardList = ({
               {distro.latest_release_date || "Data indisponível"}
             </span>
           </div>
-          
+
           <div className="flex-shrink-0">
             <ScoreBadge score={distro.score || distro.rating || 0} size="sm" />
           </div>

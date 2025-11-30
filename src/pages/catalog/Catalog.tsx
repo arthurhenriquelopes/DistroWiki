@@ -2,6 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import DistroCard from "@/components/distro/DistroCard";
 import CatalogFilters from "@/components/catalog/CatalogFilters";
+import CatalogSearch from "../../components/catalog/CatalogSearch";
+import ActiveFilterChips from "@/components/catalog/ActiveFilterChips";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -13,10 +15,11 @@ const Catalog = () => {
   const [sortBy, setSortBy] = useState<string>("score");
   const [filterFamily, setFilterFamily] = useState<string>("all");
   const [filterDE, setFilterDE] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [distros, setDistros] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showSpecs, setShowSpecs] = useState(true);
+  const [showSpecs, setShowSpecs] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
   useEffect(() => {
@@ -37,7 +40,13 @@ const Catalog = () => {
           id: d.id,
           name: d.name,
           family: d.family || "Independent",
-          desktopEnvironments: d.desktop_environments || [],
+          desktopEnvironments: (() => {
+            const des = d.desktop_environments || [];
+            if (des.length === 0 || des.some((de) => de.includes("None"))) {
+              return ["None"];
+            }
+            return des;
+          })(),
           score: d.rating || 0,
           logo: `/logos/${d.id}.svg`,
           website: d.homepage,
@@ -65,32 +74,89 @@ const Catalog = () => {
   const families = Array.from(new Set(distros.map((d) => d.family)));
   const allDEs = Array.from(new Set(distros.flatMap((d) => d.desktopEnvironments))).sort();
 
+  // Filtros ativos para chips
+  const activeFilters = useMemo(() => {
+    const filters = [];
+    if (filterFamily !== "all") {
+      filters.push({ id: "family", label: filterFamily, value: filterFamily });
+    }
+    if (filterDE !== "all") {
+      filters.push({ id: "de", label: filterDE, value: filterDE });
+    }
+    return filters;
+  }, [filterFamily, filterDE]);
+
+  const handleRemoveFilter = (id: string) => {
+    if (id === "family") setFilterFamily("all");
+    if (id === "de") setFilterDE("all");
+  };
+
+  const handleClearAllFilters = () => {
+    setFilterFamily("all");
+    setFilterDE("all");
+    setSearchQuery("");
+  };
+
   const filteredAndSortedDistros = useMemo(() => {
     let filtered = [...distros];
 
+    // Filtro de busca
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (d) =>
+          d.name.toLowerCase().includes(query) ||
+          d.family.toLowerCase().includes(query) ||
+          d.description?.toLowerCase().includes(query) ||
+          d.desktopEnvironments.some((de: string) => de.toLowerCase().includes(query))
+      );
+    }
+
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(
+        (d) =>
+          d.name.toLowerCase().includes(query) ||
+          d.family.toLowerCase().includes(query) ||
+          d.description?.toLowerCase().includes(query) ||
+          d.desktopEnvironments.some((de: string) =>
+            de.toLowerCase().includes(query)
+          )
+      );
+    }
+    
+    // Filtro de família
     if (filterFamily !== "all") {
       filtered = filtered.filter((d) => d.family === filterFamily);
     }
 
+    // Filtro de DE
     if (filterDE !== "all") {
       filtered = filtered.filter((d) => d.desktopEnvironments.includes(filterDE));
     }
 
+    // Ordenação
     filtered.sort((a, b) => {
       switch (sortBy) {
         case "score":
           return b.score - a.score;
         case "name":
           return a.name.localeCompare(b.name);
+        case "release":
+          if (!a.release_year && !b.release_year) return 0;
+          if (!a.release_year) return 1;
+          if (!b.release_year) return -1;
+          return b.release_year - a.release_year;
         default:
           return 0;
       }
     });
 
+    // Mover selecionados para o topo
     const selected = filtered.filter((d) => isSelected(d.id));
     const unselected = filtered.filter((d) => !isSelected(d.id));
     return [...selected, ...unselected];
-  }, [distros, sortBy, filterFamily, filterDE, selectedDistros]);
+  }, [distros, sortBy, filterFamily, filterDE, searchQuery, selectedDistros]);
 
   const handleSelectToggle = (distro: any) => {
     if (isSelected(distro.id)) {
@@ -126,6 +192,17 @@ const Catalog = () => {
 
       {!loading && !error && (
         <>
+          {/* Search Bar */}
+          <div className="mb-6">
+            <CatalogSearch
+              value={searchQuery}
+              onChange={setSearchQuery}
+              resultCount={filteredAndSortedDistros.length}
+              totalCount={distros.length}
+            />
+          </div>
+
+          {/* Filtros */}
           <CatalogFilters
             sortBy={sortBy}
             setSortBy={setSortBy}
@@ -141,12 +218,18 @@ const Catalog = () => {
             setViewMode={setViewMode}
           />
 
-          <div className="mb-6">
-            <p className="text-muted-foreground">
-              Exibindo <span className="font-semibold">{filteredAndSortedDistros.length}</span> distribuições
-            </p>
-          </div>
+          {/* Filter Chips */}
+          {(activeFilters.length > 0 || searchQuery) && (
+            <div className="mb-6">
+              <ActiveFilterChips
+                filters={activeFilters}
+                onRemove={handleRemoveFilter}
+                onClearAll={handleClearAllFilters}
+              />
+            </div>
+          )}
 
+          {/* Grid de Distros */}
           <motion.div
             className={`grid gap-6 mb-12 ${
               viewMode === "grid"
@@ -168,6 +251,7 @@ const Catalog = () => {
             ))}
           </motion.div>
 
+          {/* Botão de Comparação */}
           {selectedDistros.length >= 2 && (
             <motion.div className="fixed bottom-8 right-8 z-50">
               <Link to="/comparacao">
