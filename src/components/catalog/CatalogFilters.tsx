@@ -60,7 +60,7 @@ const CatalogFilters = ({
             Família/Base
           </label>
           <Select value={filterFamily} onValueChange={setFilterFamily}>
-            <SelectTrigger className="h-9 text-sm">
+            <SelectTrigger className="h-9 text-sm" aria-label="Filtrar por família ou base da distribuição">
               <SelectValue placeholder="Todas" />
             </SelectTrigger>
             <SelectContent>
@@ -79,7 +79,7 @@ const CatalogFilters = ({
             Ambiente Gráfico
           </label>
           <Select value={filterDE} onValueChange={setFilterDE}>
-            <SelectTrigger className="h-9 text-sm">
+            <SelectTrigger className="h-9 text-sm" aria-label="Filtrar por ambiente gráfico">
               <SelectValue placeholder="Todos" />
             </SelectTrigger>
             <SelectContent>
@@ -98,7 +98,7 @@ const CatalogFilters = ({
             Ordenar por
           </label>
           <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="h-9 text-sm">
+            <SelectTrigger className="h-9 text-sm" aria-label="Ordenar distribuições">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

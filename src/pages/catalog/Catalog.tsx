@@ -1,14 +1,14 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import DistroCard from "@/components/distro/DistroCard";
-import DistroCardSkeleton from "@/components/DistroCardSkeleton"; // ✅ ADICIONAR
+import DistroCardSkeleton from "@/components/DistroCardSkeleton";
 import CatalogFilters from "@/components/catalog/CatalogFilters";
 import CatalogSearch from "../../components/catalog/CatalogSearch";
 import ActiveFilterChips from "@/components/catalog/ActiveFilterChips";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { GitCompare, AlertCircle } from "lucide-react"; // ✅ REMOVER Loader2
+import { GitCompare, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const Catalog = () => {
