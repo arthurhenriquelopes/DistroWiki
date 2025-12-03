@@ -95,7 +95,7 @@ const Comparison = () => {
                 <button
                   onClick={() => removeDistro(distro.id)}
                   className="absolute top-4 right-4 text-muted-foreground hover:text-destructive smooth-transition"
-                  aria-label={`Remover ${distro.name} da comparação`}
+                  aria-label="Remover"
                 >
                   <X className="w-5 h-5" />
                 </button>

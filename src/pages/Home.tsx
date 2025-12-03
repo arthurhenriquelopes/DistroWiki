@@ -131,9 +131,6 @@ const Home = () => {
             <img 
               src="/logo/logo.svg" 
               alt="DistroWiki Logo" 
-              width="128"
-              height="128"
-              fetchpriority="high"
               className="h-32 w-32 md:h-30 md:w-30 inline-block"
             />
           </motion.h1>
@@ -182,7 +179,7 @@ const Home = () => {
                 <div>
                   <label className="block text-sm font-medium mb-2 text-foreground">Primeira Distro</label>
                   <Select value={distro1} onValueChange={setDistro1}>
-                    <SelectTrigger className="h-12 bg-background border-2 border-border hover:border-primary transition-colors" aria-label="Selecionar primeira distribuição Linux para comparar">
+                    <SelectTrigger className="h-12 bg-background border-2 border-border hover:border-primary transition-colors">
                       <SelectValue placeholder="Escolha uma distro..." />
                     </SelectTrigger>
                     <SelectContent className="max-h-[300px]">
@@ -203,7 +200,7 @@ const Home = () => {
                 <div>
                   <label className="block text-sm font-medium mb-2 text-foreground">Segunda Distro</label>
                   <Select value={distro2} onValueChange={setDistro2}>
-                    <SelectTrigger className="h-12 bg-background border-2 border-border hover:border-primary transition-colors" aria-label="Selecionar segunda distribuição Linux para comparar">
+                    <SelectTrigger className="h-12 bg-background border-2 border-border hover:border-primary transition-colors">
                       <SelectValue placeholder="Escolha uma distro..." />
                     </SelectTrigger>
                     <SelectContent className="max-h-[300px]">
@@ -291,9 +288,6 @@ const Home = () => {
                 <img
                   src={distro.logo}
                   alt={`${distro.name} logo`}
-                  width="64"
-                  height="64"
-                  loading="lazy"
                   className="w-16 h-16 object-contain"
                 />
                 <div className="flex-1">

@@ -182,7 +182,7 @@ const Home = () => {
                 <div>
                   <label className="block text-sm font-medium mb-2 text-foreground">Primeira Distro</label>
                   <Select value={distro1} onValueChange={setDistro1}>
-                    <SelectTrigger className="h-12 bg-background border-2 border-border hover:border-primary transition-colors" aria-label="Selecionar primeira distribuição Linux para comparar">
+                    <SelectTrigger className="h-12 bg-background border-2 border-border hover:border-primary transition-colors">
                       <SelectValue placeholder="Escolha uma distro..." />
                     </SelectTrigger>
                     <SelectContent className="max-h-[300px]">
@@ -203,7 +203,7 @@ const Home = () => {
                 <div>
                   <label className="block text-sm font-medium mb-2 text-foreground">Segunda Distro</label>
                   <Select value={distro2} onValueChange={setDistro2}>
-                    <SelectTrigger className="h-12 bg-background border-2 border-border hover:border-primary transition-colors" aria-label="Selecionar segunda distribuição Linux para comparar">
+                    <SelectTrigger className="h-12 bg-background border-2 border-border hover:border-primary transition-colors">
                       <SelectValue placeholder="Escolha uma distro..." />
                     </SelectTrigger>
                     <SelectContent className="max-h-[300px]">
