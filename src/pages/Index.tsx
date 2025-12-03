@@ -133,7 +133,7 @@ const Home = () => {
               alt="DistroWiki Logo" 
               width="128"
               height="128"
-              fetchpriority="high"
+              fetchPriority="high"
               className="h-32 w-32 md:h-30 md:w-30 inline-block"
             />
           </motion.h1>
