@@ -1,10 +1,37 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface DistroCardSkeletonProps {
-  viewMode?: "list" | "grid";
+  viewMode?: "list" | "grid" | "terminal";
 }
 
 const DistroCardSkeleton = ({ viewMode = "list" }: DistroCardSkeletonProps) => {
+  if (viewMode === "terminal") {
+    return (
+      <div className="bg-[#0d1117] border-2 border-gray-500 rounded-lg overflow-hidden animate-pulse">
+        {/* Terminal Header */}
+        <div className="bg-gray-800/50 border-b border-gray-700/50 px-3 py-2 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1.5">
+              <Skeleton className="w-3 h-3 rounded-full" />
+              <Skeleton className="w-3 h-3 rounded-full" />
+              <Skeleton className="w-3 h-3 rounded-full" />
+            </div>
+            <Skeleton className="h-3 w-32 ml-2" />
+          </div>
+        </div>
+        {/* Terminal Content */}
+        <div className="p-4 space-y-2 min-h-[200px]">
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-3/4" />
+          <Skeleton className="h-3 w-5/6" />
+          <Skeleton className="h-3 w-2/3 mt-3" />
+          <Skeleton className="h-3 w-4/5" />
+          <Skeleton className="h-3 w-1/2 mt-3" />
+        </div>
+      </div>
+    );
+  }
+
   if (viewMode === "grid") {
     return (
       <div className="bg-card border border-border rounded-xl p-4 h-full flex flex-col items-center">

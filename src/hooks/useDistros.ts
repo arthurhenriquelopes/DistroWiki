@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { transformDistros, type Distro } from "@/utils/apiTransform";
+import { transformDistros } from "@/utils/apiTransform";
+import type { Distro } from "@/types";
 
 interface UseDistrosOptions {
   page?: number;

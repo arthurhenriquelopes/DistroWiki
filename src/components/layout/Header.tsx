@@ -3,6 +3,7 @@ import { Menu, X, Github } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import Logo from "../Logo";
+import { ThemeToggle } from "../theme-toggle";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -46,6 +47,7 @@ const Header = () => {
           >
             <Github className="h-5 w-5" />
           </a>
+          <ThemeToggle />
         </nav>
 
         <button
@@ -85,6 +87,9 @@ const Header = () => {
               <Github className="h-5 w-5" />
               <span>GitHub</span>
             </a>
+            <div className="pt-2">
+              <ThemeToggle />
+            </div>
           </nav>
         </div>
       )}

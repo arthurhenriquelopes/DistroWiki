@@ -1,8 +1,10 @@
-import { Distro } from "@/data/distros";
+import { Distro } from "@/types";
 import { Link } from "react-router-dom";
 import ScoreBadge from "@/components/ScoreBadge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar, Cpu, HardDrive, Rocket } from "lucide-react";
+import { getDesktopEnvColor } from "@/utils/desktopEnvColors";
+import { calculatePerformanceScore } from "@/utils/scoreCalculation";
 
 interface DistroCardListProps {
   distro: Distro;
@@ -28,25 +30,6 @@ const DistroCardList = ({
     }
     const baseName = family.split(/[/(]/)[0].trim();
     return `Baseado em ${baseName.charAt(0).toUpperCase() + baseName.slice(1)}`;
-  };
-
-  const getDesktopEnvColor = (desktopEnv: string): string => {
-    const colorMap: { [key: string]: string } = {
-      gnome: "bg-blue-500 text-white",
-      "kde plasma": "bg-purple-500 text-white",
-      kde: "bg-purple-500 text-white",
-      xfce: "bg-blue-400 text-white",
-      lxqt: "bg-red-500 text-white",
-      mate: "bg-green-600 text-white",
-      budgie: "bg-pink-500 text-white",
-      cinnamon: "bg-orange-500 text-white",
-      i3: "bg-gray-700 text-white",
-      sway: "bg-gray-600 text-white",
-      pantheon: "bg-cyan-500 text-white",
-      deepin: "bg-emerald-500 text-white",
-      none: "bg-transparent border border-muted-foreground/40 text-muted-foreground",
-    };
-    return colorMap[desktopEnv.toLowerCase()] || "bg-gray-500 text-white";
   };
 
   const hasPerformanceData =
@@ -205,7 +188,7 @@ const DistroCardList = ({
           </div>
 
           <div className="flex-shrink-0">
-            <ScoreBadge score={distro.score || distro.rating || 0} size="sm" />
+            <ScoreBadge score={calculatePerformanceScore(distro)} size="sm" />
           </div>
         </div>
       </Link>

@@ -7,6 +7,7 @@ import CatalogSearch from "../../components/catalog/CatalogSearch";
 import ActiveFilterChips from "@/components/catalog/ActiveFilterChips";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { useDistros } from "@/hooks/useDistros";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { GitCompare, AlertCircle } from "lucide-react";
@@ -18,8 +19,8 @@ const Catalog = () => {
   const [filterFamily, setFilterFamily] = useState<string>("all");
   const [filterDE, setFilterDE] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [showSpecs, setShowSpecs] = useState(false);
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+  const [showSpecs, setShowSpecs] = useLocalStorage("catalog-show-specs", false);
+  const [viewMode, setViewMode] = useLocalStorage<"list" | "grid" | "terminal">("catalog-view-mode", "list");
 
   // Usar hook customizado para buscar distros
   const { distros, loading, error } = useDistros();
@@ -28,6 +29,24 @@ const Catalog = () => {
   const allDEs = Array.from(
     new Set(distros.flatMap((d) => d.desktopEnvironments))
   ).sort();
+
+  const familyCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    distros.forEach((d) => {
+      counts[d.family] = (counts[d.family] || 0) + 1;
+    });
+    return counts;
+  }, [distros]);
+
+  const deCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    distros.forEach((d) => {
+      d.desktopEnvironments?.forEach((de) => {
+        counts[de] = (counts[de] || 0) + 1;
+      });
+    });
+    return counts;
+  }, [distros]);
 
   const activeFilters = useMemo(() => {
     const filters = [];
@@ -107,20 +126,38 @@ const Catalog = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-12 min-h-screen">
+    <div className={`container mx-auto px-4 py-12 min-h-screen ${viewMode === "terminal" ? "terminal-scanlines" : ""}`}>
       <motion.div
         className="mb-12"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          Catálogo de Distribuições
-        </h1>
-        <p className="text-lg text-muted-foreground">
-          {loading
-            ? "Carregando..."
-            : `Explore ${distros.length} distribuições Linux`}
-        </p>
+        {viewMode === "terminal" ? (
+          <div className="font-mono text-green-400">
+            <div className="text-xl mb-2">
+              <span className="text-blue-400">user@distrowiki</span>
+              <span className="text-gray-400">:</span>
+              <span className="text-purple-400">~/catalog</span>
+              <span className="text-gray-400">$</span> ls -la
+            </div>
+            <p className="text-sm text-gray-400">
+              {loading
+                ? "Loading distros..."
+                : `total ${distros.length} Linux distributions found`}
+            </p>
+          </div>
+        ) : (
+          <>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              Catálogo de Distribuições
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              {loading
+                ? "Carregando..."
+                : `Explore ${distros.length} distribuições Linux`}
+            </p>
+          </>
+        )}
       </motion.div>
 
       {loading && (
@@ -128,6 +165,8 @@ const Catalog = () => {
           className={`grid gap-6 mb-12 ${
             viewMode === "grid"
               ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+              : viewMode === "terminal"
+              ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
               : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
           }`}
         >
@@ -165,6 +204,8 @@ const Catalog = () => {
             setFilterDE={setFilterDE}
             families={families}
             allDEs={allDEs}
+            familyCounts={familyCounts}
+            deCounts={deCounts}
             showSpecs={showSpecs}
             setShowSpecs={setShowSpecs}
             viewMode={viewMode}
@@ -185,6 +226,8 @@ const Catalog = () => {
             className={`grid gap-6 mb-12 ${
               viewMode === "grid"
                 ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+                : viewMode === "terminal"
+                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                 : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
             }`}
           >

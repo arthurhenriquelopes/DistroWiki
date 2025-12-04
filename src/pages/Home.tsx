@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, GitCompare, BarChart3 } from "lucide-react";
 import ScoreBadge from "@/components/ScoreBadge";
+import { calculatePerformanceScore } from "@/utils/scoreCalculation";
 import { Card, CardContent } from "@/components/ui/card";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { useDistros } from "@/hooks/useDistros";
@@ -200,7 +201,7 @@ const Home = () => {
                   <p className="text-sm text-muted-foreground">{distro.family}</p>
                 </div>
               </div>
-              <ScoreBadge score={distro.score} size="lg" />
+              <ScoreBadge score={calculatePerformanceScore(distro)} size="lg" />
               </Link>
             </motion.div>
           ))}

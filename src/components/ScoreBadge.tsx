@@ -5,10 +5,10 @@ interface ScoreBadgeProps {
 
 const ScoreBadge = ({ score, size = "md" }: ScoreBadgeProps) => {
   const getScoreColor = (score: number) => {
-    if (score >= 9) return "bg-success text-success-foreground";
-    if (score >= 8) return "bg-primary text-primary-foreground";
-    if (score >= 7) return "bg-warning text-warning-foreground";
-    return "bg-secondary text-secondary-foreground";
+    if (score === 0) return "bg-secondary text-secondary-foreground";
+    if (score > 80) return "bg-green-600 text-white";
+    if (score > 60) return "bg-yellow-500 text-white";
+    return "bg-red-600 text-white";
   };
 
   const sizeClasses = {

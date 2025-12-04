@@ -1,6 +1,7 @@
-import { Distro } from "@/data/distros";
+import { Distro } from "@/types";
 import DistroCardGrid from "./DistroCardGrid";
 import DistroCardList from "./DistroCardList";
+import DistroCardTerminal from "./DistroCardTerminal";
 
 interface DistroCardProps {
   distro: Distro;
@@ -8,7 +9,7 @@ interface DistroCardProps {
   onSelectToggle?: () => void;
   showCheckbox?: boolean;
   showSpecs?: boolean;
-  viewMode?: "list" | "grid";
+  viewMode?: "list" | "grid" | "terminal";
 }
 
 const DistroCard = ({
@@ -19,6 +20,17 @@ const DistroCard = ({
   showSpecs = true,
   viewMode = "list",
 }: DistroCardProps) => {
+  if (viewMode === "terminal") {
+    return (
+      <DistroCardTerminal
+        distro={distro}
+        isSelected={isSelected}
+        onSelectToggle={onSelectToggle}
+        showCheckbox={showCheckbox}
+      />
+    );
+  }
+
   if (viewMode === "grid") {
     return (
       <DistroCardGrid

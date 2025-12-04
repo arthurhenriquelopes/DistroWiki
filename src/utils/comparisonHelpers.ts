@@ -1,4 +1,5 @@
-import { transformDistro, type Distro, type DistroAPI } from "./apiTransform";
+import { transformDistro } from "./apiTransform";
+import type { Distro, DistroAPI } from "@/types";
 
 /**
  * Carrega uma distro individual da API

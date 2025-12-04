@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, LayoutGrid, LayoutList } from "lucide-react";
+import { Eye, EyeOff, LayoutGrid, LayoutList, Terminal } from "lucide-react";
 
 interface CatalogViewControlsProps {
   showSpecs: boolean;
   setShowSpecs: (value: boolean) => void;
-  viewMode: "list" | "grid";
-  setViewMode: (value: "list" | "grid") => void;
+  viewMode: "list" | "grid" | "terminal";
+  setViewMode: (value: "list" | "grid" | "terminal") => void;
 }
 
 const CatalogViewControls = ({
@@ -58,6 +58,19 @@ const CatalogViewControls = ({
           aria-label="Visualização em grade"
         >
           <LayoutGrid className="w-4 h-4" />
+        </Button>
+        <Button
+          variant={viewMode === "terminal" ? "secondary" : "ghost"}
+          size="sm"
+          onClick={() => setViewMode("terminal")}
+          className={`rounded-none border-0 px-3 ${
+            viewMode === "terminal"
+              ? "bg-secondary text-secondary-foreground"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted"
+          }`}
+          aria-label="Visualização terminal"
+        >
+          <Terminal className="w-4 h-4" />
         </Button>
       </div>
     </div>

@@ -2,7 +2,9 @@ import { useComparison } from "@/contexts/ComparisonContext";
 import { motion } from "framer-motion";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ExternalLink, X } from "lucide-react";
+import { ArrowLeft, ExternalLink, X, Share2, Check } from "lucide-react";
+import { getDesktopEnvColor } from "@/utils/desktopEnvColors";
+import { calculatePerformanceScore } from "@/utils/scoreCalculation";
 import ScoreBadge from "@/components/ScoreBadge";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
@@ -18,6 +20,7 @@ const Comparison = () => {
   const { distroIds } = useParams<{ distroIds?: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // Carregar distros da URL se houver parâmetros
   useEffect(() => {
@@ -85,6 +88,17 @@ const Comparison = () => {
   // Usar helpers utilitários
   const performanceAvailable = hasPerformanceData(selectedDistros);
 
+  const handleShare = async () => {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Erro ao copiar URL:", err);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-12 min-h-screen">
       <motion.div 
@@ -93,12 +107,34 @@ const Comparison = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <Link to="/catalogo">
-          <Button variant="ghost" className="mb-4">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Voltar ao Catálogo
+        <div className="flex items-center justify-between mb-4">
+          <Link to="/catalogo">
+            <Button variant="ghost">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Voltar ao Catálogo
+            </Button>
+          </Link>
+          
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={handleShare}
+            className="gap-2"
+          >
+            {copied ? (
+              <>
+                <Check className="h-4 w-4" />
+                Copiado!
+              </>
+            ) : (
+              <>
+                <Share2 className="h-4 w-4" />
+                Compartilhar
+              </>
+            )}
           </Button>
-        </Link>
+        </div>
+        
         <h1 className="text-4xl md:text-5xl font-bold mb-2">Comparação de Distros</h1>
         <p className="text-muted-foreground">
           Comparando {selectedDistros.length} distribuições lado a lado
@@ -158,7 +194,7 @@ const Comparison = () => {
                   {distro.family || distro.based_on || 'Independente'}
                 </p>
                 <div className="flex justify-center">
-                  <ScoreBadge score={distro.score || distro.rating || 0} size="lg" />
+                  <ScoreBadge score={calculatePerformanceScore(distro)} size="lg" />
                 </div>
               </div>
 
@@ -213,9 +249,12 @@ const Comparison = () => {
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {(distro.desktopEnvironments || distro.desktop_environments).map((de: string) => (
-                        <Badge key={de} variant="secondary" className="text-xs">
+                        <span
+                          key={de}
+                          className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${getDesktopEnvColor(de)}`}
+                        >
                           {de}
-                        </Badge>
+                        </span>
                       ))}
                     </div>
                   </div>

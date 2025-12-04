@@ -17,10 +17,12 @@ interface CatalogFiltersProps {
   setFilterDE: (value: string) => void;
   families: string[];
   allDEs: string[];
+  familyCounts: Record<string, number>;
+  deCounts: Record<string, number>;
   showSpecs: boolean;
   setShowSpecs: (value: boolean) => void;
-  viewMode: "list" | "grid";
-  setViewMode: (value: "list" | "grid") => void;
+  viewMode: "list" | "grid" | "terminal";
+  setViewMode: (value: "list" | "grid" | "terminal") => void;
 }
 
 const CatalogFilters = ({
@@ -32,6 +34,8 @@ const CatalogFilters = ({
   setFilterDE,
   families,
   allDEs,
+  familyCounts,
+  deCounts,
   showSpecs,
   setShowSpecs,
   viewMode,
@@ -67,7 +71,10 @@ const CatalogFilters = ({
               <SelectItem value="all">Todas</SelectItem>
               {families.map((family) => (
                 <SelectItem key={family} value={family}>
-                  {family}
+                  <div className="flex items-center justify-between w-full gap-2">
+                    <span>{family}</span>
+                    <span className="text-xs text-muted-foreground">({familyCounts[family] || 0})</span>
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>
@@ -86,7 +93,10 @@ const CatalogFilters = ({
               <SelectItem value="all">Todos</SelectItem>
               {allDEs.map((de) => (
                 <SelectItem key={de} value={de}>
-                  {de}
+                  <div className="flex items-center justify-between w-full gap-2">
+                    <span>{de}</span>
+                    <span className="text-xs text-muted-foreground">({deCounts[de] || 0})</span>
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>

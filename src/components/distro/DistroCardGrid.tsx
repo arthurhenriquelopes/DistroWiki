@@ -1,7 +1,8 @@
-import { Distro } from "@/data/distros";
+import { Distro } from "@/types";
 import { Link } from "react-router-dom";
 import ScoreBadge from "@/components/ScoreBadge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { calculatePerformanceScore } from "@/utils/scoreCalculation";
 
 interface DistroCardGridProps {
   distro: Distro;
@@ -44,7 +45,7 @@ const DistroCardGrid = ({
         </div>
         
         <div className="flex-shrink-0 mt-2">
-          <ScoreBadge score={distro.score || distro.rating || 0} size="sm" />
+          <ScoreBadge score={calculatePerformanceScore(distro)} size="sm" />
         </div>
       </Link>
     </div>
